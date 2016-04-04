@@ -489,7 +489,7 @@ class UserManager implements UserProviderInterface
             'roles' => implode(',', $user->getRoles()),
             'timeCreated' => $user->getTimeCreated(),
             'username' => $user->getRealUsername(),
-            'isEnabled' => $user->isEnabled(),
+            'isEnabled' => (int)$user->isEnabled(),
             'confirmationToken' => $user->getConfirmationToken(),
             'timePasswordResetRequested' => $user->getTimePasswordResetRequested(),
         );
@@ -535,7 +535,7 @@ class UserManager implements UserProviderInterface
             'roles' => implode(',', $user->getRoles()),
             'timeCreated' => $user->getTimeCreated(),
             'username' => $user->getRealUsername(),
-            'isEnabled' => $user->isEnabled(),
+            'isEnabled' => (int)$user->isEnabled(),
             'confirmationToken' => $user->getConfirmationToken(),
             'timePasswordResetRequested' => $user->getTimePasswordResetRequested(),
             'id' => $user->getId(),
