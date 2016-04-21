@@ -94,30 +94,12 @@ class UserController
                 if ($error = $this->userManager->validatePasswordStrength($user, $request->request->get('password'))) {
                     throw new InvalidArgumentException($error);
                 }
-                if ($this->isEmailConfirmationRequired) {
-                    $user->setEnabled(false);
-                    $user->setConfirmationToken($app['user.tokenGenerator']->generateToken());
-                }
+
+                $user->setEnabled(false);
+
                 $this->userManager->insert($user);
 
-                if ($this->isEmailConfirmationRequired) {
-                    // Send email confirmation.
-                    $app['user.mailer']->sendConfirmationMessage($user);
-
-                    // Render the "go check your email" page.
-                    return $app['twig']->render($this->getTemplate('register-confirmation-sent'), array(
-                        'layout_template' => $this->getTemplate('layout'),
-                        'email' => $user->getEmail(),
-                    ));
-                } else {
-                    // Log the user in to the new account.
-                    $this->userManager->loginAsUser($user);
-
-                    $app['session']->getFlashBag()->set('alert', 'Account created.');
-
-                    // Redirect to user's new profile page.
-                    return $app->redirect($app['url_generator']->generate('user.view', array('id' => $user->getId())));
-                }
+                return $app->redirect(sprintf($app['config']['billing_url'], $user->getId(), $user->getEmail()));
 
             } catch (InvalidArgumentException $e) {
                 $error = $e->getMessage();
