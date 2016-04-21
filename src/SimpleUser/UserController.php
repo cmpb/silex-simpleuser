@@ -162,11 +162,12 @@ class UserController
             // The Security system throws this exception before actually checking if the password was valid.
             $user = $this->userManager->refreshUser($authException->getUser());
 
-            return $app['twig']->render($this->getTemplate('login-confirmation-needed'), array(
+            return $app['twig']->render($this->getTemplate('login'), array(
                 'layout_template' => $this->getTemplate('layout'),
-                'email' => $user->getEmail(),
-                'fromAddress' => $app['user.mailer']->getFromAddress(),
-                'resendUrl' => $app['url_generator']->generate('user.resend-confirmation'),
+                'error' => 'Your account is not active',
+                'last_username' => $app['session']->get('_security.last_username'),
+                'allowRememberMe' => isset($app['security.remember_me.response_listener']),
+                'allowPasswordReset' => $this->isPasswordResetEnabled(),
             ));
         }
 
